@@ -1,85 +1,166 @@
+<div align="center">
+  
 # 🧠 Agentic-Discourse
+  
+**The Next-Generation Multi-Agent Debate & Synthesis Platform**
 
-> A real-time, multi-agent debate platform where AI personas analyze, argue, and synthesize complex topics using live web data.
+[![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/release/python-3110/)
+[![Next.js 14](https://img.shields.io/badge/next.js-14-black.svg)](https://nextjs.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-009688.svg?logo=fastapi)](https://fastapi.tiangolo.com/)
+[![LangGraph](https://img.shields.io/badge/LangGraph-Multi--Agent-orange.svg)](https://python.langchain.com/docs/langgraph)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
+[![Maintained by kamalesh404](https://img.shields.io/badge/Maintained_by-kamalesh404-blue.svg)](https://github.com/kamalesh404)
 
-![Build Status](https://img.shields.io/github/actions/workflow/status/kamalesh404/Agentic-discourse/ci.yml?branch=main)
-![License](https://img.shields.io/badge/license-MIT-blue.svg)
-![Python](https://img.shields.io/badge/python-3.11+-blue.svg)
-![Next.js](https://img.shields.io/badge/next.js-14-black)
+*Empowering ideas through adversarial thinking and automated research.*
+
+[Features](#-key-features) • [Architecture](#-architecture) • [Installation](#-quick-start) • [Documentation](#-documentation) • [Contributing](#-contributing)
+
+</div>
+
+---
 
 ## 📖 Overview
 
-**Agentic-Discourse** solves the problem of echo chambers and single-perspective research. Instead of asking an LLM a question and getting a single, generic response, you can propose a topic and watch distinct AI personas (The Skeptic, The Optimist, The Judge) debate the topic in real-time.
+**Agentic-Discourse** is an advanced open-source platform designed to eliminate echo chambers and enhance decision-making through AI-driven debate. 
 
-### Key Features
-- **Real-Time Streaming:** Watch the agents type out their thoughts and arguments live.
-- **Distinct Personas:** Agents have unique roles and system prompts to ensure a balanced debate.
-- **Web Search Integration:** Agents pull live data from the internet to back up their claims.
-- **Beautiful UI:** A modern, glassmorphism-inspired chat interface built with Next.js and TailwindCSS.
+Instead of relying on a single LLM output, users submit a topic, startup idea, or hypothesis to a **Multi-Agent Council**. Distinct AI personas (The Skeptic, The Optimist, The Judge) autonomously research the web, construct arguments, critique each other, and finally synthesize a balanced verdict in real-time.
+
+### Why Agentic-Discourse?
+- **For Founders:** Validate startup ideas against an AI that actively tries to find reasons it will fail.
+- **For Researchers:** Analyze complex topics from multiple perspectives without manual bias.
+- **For Developers:** A reference architecture for combining Next.js with LangGraph and FastAPI.
+
+---
+
+## ✨ Key Features
+
+| Feature | Description | Tech Stack |
+|---------|-------------|------------|
+| ⚡ **Real-Time Streaming** | Watch agents construct arguments and debate live. | Server-Sent Events (SSE) |
+| 🎭 **Distinct Personas** | Granular system prompts enforce strict adversarial roles. | LangChain Core |
+| 🌐 **Autonomous Web Search** | Agents break out of their training data to cite live web sources. | Tavily API / DuckDuckGo |
+| 🧠 **Graph Orchestration** | Deterministic state machine handles turn-taking and context windows. | LangGraph |
+| 🎨 **Glassmorphism UI** | A stunning, highly animated, dark-mode-first chat interface. | Next.js, Tailwind, Framer Motion |
+
+---
 
 ## 🏗️ Architecture
+
+The project utilizes a strictly decoupled architecture, ensuring scalability and clean separation of concerns.
 
 ```mermaid
 flowchart TD
     User([User]) --> UI[Next.js Frontend]
-    UI -- SSE --> API[FastAPI Backend]
+    UI -- SSE Stream --> API[FastAPI Backend]
     
-    subgraph Backend [Python Backend]
-        API --> LG[LangGraph Orchestrator]
-        LG --> Agent1[The Skeptic]
-        LG --> Agent2[The Optimist]
-        LG --> Agent3[The Judge]
+    subgraph Multi-Agent Orchestration [Python Backend]
+        API --> LG[LangGraph State Machine]
+        LG --> Agent1[🔴 The Skeptic]
+        LG --> Agent2[🟢 The Optimist]
+        LG --> Agent3[⚖️ The Judge]
     end
     
-    Agent1 -.-> WebSearch[Web Search API]
+    Agent1 -.-> WebSearch[(Live Web Data)]
     Agent2 -.-> WebSearch
     
-    Agent1 -.-> LLM[LLM Provider]
+    Agent1 -.-> LLM[Google Gemini / OpenAI]
     Agent2 -.-> LLM
     Agent3 -.-> LLM
 ```
 
-## 📂 Project Structure
+---
 
-```text
-Agentic-discourse/
-├── frontend/          # Next.js Application (React, Tailwind, Framer Motion)
-├── backend/           # Python FastAPI Application (LangGraph)
-├── .github/           # CI/CD Workflows
-├── README.md
-└── .env.example
-```
-
-## 🚀 Getting Started
+## 🚀 Quick Start
 
 ### Prerequisites
-- Python 3.11+
-- Node.js 20+
+- [Node.js](https://nodejs.org/en/) 20.0+
+- [Python](https://www.python.org/) 3.11+
+- API Keys for Google Gemini or OpenAI
 
-### Backend Setup
+### 1. Clone the Repository
+```bash
+git clone https://github.com/kamalesh404/Agentic-discourse.git
+cd Agentic-discourse
+```
+
+### 2. Backend Setup (FastAPI & LangGraph)
 ```bash
 cd backend
 python -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
 pip install -r requirements.txt
+
+# Configure environment variables
+cp ../.env.example .env
+# Edit .env and add your GOOGLE_API_KEY
+
 python main.py
 ```
+*Backend runs on http://localhost:8000*
 
-### Frontend Setup
+### 3. Frontend Setup (Next.js)
 ```bash
-cd frontend
+cd ../frontend
 npm install
 npm run dev
 ```
+*Frontend runs on http://localhost:3000*
 
-## 🛠️ Built With
-* [FastAPI](https://fastapi.tiangolo.com/) - Backend API
-* [LangGraph](https://python.langchain.com/docs/langgraph) - Multi-Agent Orchestration
-* [Next.js](https://nextjs.org/) - Frontend Framework
-* [TailwindCSS](https://tailwindcss.com/) - Styling
+---
 
-## 📝 License
-This project is licensed under the MIT License - see the LICENSE file for details.
+## 📂 Project Structure
 
-## ✨ Acknowledgments
-Created by [Kamalesh404](https://github.com/kamalesh404).
+```text
+Agentic-discourse/
+├── .github/
+│   ├── ISSUE_TEMPLATE/     # Templates for bug reports and features
+│   └── workflows/          # GitHub Actions CI/CD pipelines
+├── backend/
+│   ├── agents/             # LangGraph Nodes, State, and Graph compilation
+│   ├── core/               # Configuration and utilities
+│   ├── models/             # Pydantic data schemas
+│   ├── main.py             # FastAPI entry point
+│   └── requirements.txt    # Python dependencies
+├── frontend/
+│   ├── src/
+│   │   ├── app/            # Next.js App Router and global CSS
+│   │   └── components/     # Reusable React components (ChatBubble)
+│   ├── package.json        # Node dependencies
+│   └── tailwind.config.ts  # Tailwind configuration
+├── .env.example            # Environment variable template
+├── CODE_OF_CONDUCT.md      # Community guidelines
+├── CONTRIBUTING.md         # Guidelines for contributing
+├── SECURITY.md             # Security vulnerability reporting
+└── README.md               # You are here
+```
+
+---
+
+## 🤝 Contributing
+
+We welcome contributions from the community! Whether it's a bug fix, new feature, or documentation improvement, please read our [Contributing Guidelines](CONTRIBUTING.md) first.
+
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'feat: Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+---
+
+## 🛡️ Security
+
+If you discover any security related issues, please refer to our [Security Policy](SECURITY.md) and email the maintainer directly instead of using the issue tracker.
+
+---
+
+## 📄 License
+
+Distributed under the MIT License. See `LICENSE` for more information.
+
+---
+
+<div align="center">
+  <b>Built with ❤️ by <a href="https://github.com/kamalesh404">kamalesh404</a></b>
+</div>
